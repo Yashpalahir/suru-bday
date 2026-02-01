@@ -30,17 +30,17 @@ const AudioPlayer = ({ play }: { play: boolean }) => {
                     'loop': 1,
                     'playlist': 'COGifdOP198',
                     'playsinline': 1,
+                    'start': 17, // Start the song at 17 seconds
                     'origin': window.location.origin
                 },
                 events: {
                     'onReady': (event: any) => {
-                        event.target.setVolume(50); // Set to 50% for better audibility
+                        event.target.setVolume(50);
                     }
                 }
             });
         };
 
-        // If YT is already loaded (on re-renders), manually trigger initialization
         if (window.YT && window.YT.Player) {
             window.onYouTubeIframeAPIReady();
         }
@@ -48,17 +48,12 @@ const AudioPlayer = ({ play }: { play: boolean }) => {
 
     useEffect(() => {
         if (play && playerRef.current && typeof playerRef.current.playVideo === 'function') {
-            // Wait 17 seconds after the journey starts before playing music
-            const timer = setTimeout(() => {
-                try {
-                    playerRef.current.playVideo();
-                    // To bypass aggressive autoplay blocks, we try to play
-                    console.log("Attempting to play music after 17s delay...");
-                } catch (e) {
-                    console.error("Audio playback error:", e);
-                }
-            }, 17000);
-            return () => clearTimeout(timer);
+            try {
+                playerRef.current.playVideo();
+                console.log("Playing music from 17s mark...");
+            } catch (e) {
+                console.error("Audio playback error:", e);
+            }
         }
     }, [play]);
 
