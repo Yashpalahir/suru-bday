@@ -1,48 +1,57 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+declare global {
+    interface Window {
+        onYouTubeIframeAPIReady: () => void;
+        YT: any;
+    }
+}
 
 const AudioPlayer = ({ play }: { play: boolean }) => {
-    const audioRef = useRef<HTMLAudioElement>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const playerRef = useRef<any>(null);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        if (play && audioRef.current) {
-            audioRef.current.volume = 0.3; // Low volume
-            audioRef.current.play().then(() => setIsPlaying(true)).catch(e => console.log("Audio play failed (interaction needed first)", e));
-        }
-    }, [play]);
+        // Load YouTube IFrame API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
-    const toggle = () => {
-        if (!audioRef.current) return;
-        if (isPlaying) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
+        window.onYouTubeIframeAPIReady = () => {
+            playerRef.current = new window.YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'COGifdOP198', // The requested song
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'COGifdOP198', // Required for loop to work
+                    'playsinline': 1,
+                    'start': 15
+                },
+                events: {
+                    'onReady': (event: any) => {
+                        event.target.setVolume(20); // Set volume to 20%
+                        setIsReady(true);
+                    },
+
+                }
+            });
+        };
+    }, []);
+
+    useEffect(() => {
+        if (play && isReady && playerRef.current && playerRef.current.playVideo) {
+            playerRef.current.playVideo();
         }
-        setIsPlaying(!isPlaying);
-    };
+    }, [play, isReady]);
+
 
     return (
-        <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
-            <button
-                onClick={toggle}
-                style={{
-                    background: 'rgba(26, 26, 46, 0.6)',
-                    border: '1px solid var(--color-pink)',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    color: 'var(--color-pink)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.2rem'
-                }}
-            >
-                {isPlaying ? '🎵' : '🔇'}
-            </button>
-            {/* Placeholder music file - User needs to add music.mp3 to public folder */}
-            <audio ref={audioRef} loop src="/music.mp3" />
+        <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000, display: 'none' }}>
+            <div id="youtube-player"></div>
         </div>
     );
 };

@@ -44,8 +44,17 @@ const Finale: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 1 }}
             >
-                <h1 className="font-handwriting" style={{ fontSize: '3.5rem', color: 'var(--color-pink)', marginBottom: '1rem', textShadow: '0 0 10px rgba(255,193,204,0.5)' }}>
-                    Happy Birthday Surksha
+                <h1 className="font-handwriting" style={{
+                    fontSize: 'clamp(2rem, 8vw, 3.5rem)',
+                    color: 'var(--color-pink)',
+                    marginBottom: '1rem',
+                    textShadow: '0 0 10px rgba(255,193,204,0.5)',
+                    lineHeight: '1.2',
+                    overflowWrap: 'break-word',
+                    maxWidth: '100%'
+                }}>
+                    Happy Birthday<br />
+                    <span style={{ fontSize: 'clamp(1.8rem, 6vw, 3rem)' }}>surudiiii<br />(My HeartBeat)</span>
                 </h1>
                 <p style={{ fontSize: '1.5rem', marginBottom: '3rem', color: 'var(--color-text)' }}>
                     From Yashpal — your forever.

@@ -5,7 +5,11 @@ const reasons = [
     "Your smile heals me",
     "Your voice calms me",
     "Your eyes feel like home",
-    "Your love saved me"
+    "Your love saved me",
+    "The way you care for everyone",
+    "How you make me a better man",
+    "Your laugh is my favorite melody",
+    "Every moment with you is a gift"
 ];
 
 const Special: React.FC = () => {

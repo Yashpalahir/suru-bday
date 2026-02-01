@@ -1,88 +1,88 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// User should place images named 1.jpg, 2.jpg... in public/memories/
-const photos = [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
-    id: i,
-    src: `/memories/${i}.jpg`,
-    fallback: `https://placehold.co/400x600/pink/white?text=Memory+${i}`,
-    caption: `Memory ${i}`
-}));
+const moments = [
+    { year: 2019, title: "The Beginning", text: "I didn't know it then, but the moment our paths crossed, my destiny changed forever. You weren't just a stranger; you were my future waiting to happen." },
+    { year: 2020, title: "The Realization", text: "It hit me suddenly. It wasn't just a crush anymore. It was deep, terrifying, beautiful love. I realized I didn't just want you; I needed you." },
+    { year: 2021, title: "The Connection", text: "We didn't need words. Just looking at you gave me peace. In a noisy world, you became my quiet place, my sanctuary." },
+    { year: 2022, title: "The Growth", text: "We fought, we cried, we struggled. But we never let go. Every tear just watered the roots of our love, making us unbreakable." },
+    { year: 2023, title: "The Comfort", text: "Your voice became my favorite sound. Your name became my favorite word. Being with you felt more like home than any house ever could." },
+    { year: 2024, title: "The Strength", text: "When the world felt heavy, you held it up for me. You taught me that together, we can survive any storm." },
+    { year: 2025, title: "The Promise", text: "I looked at you one ordinary day and made a silent vow: 'I will love this girl until my very last breath.' I meant it then, I mean it now." },
+    { year: 2026, title: "The Forever", text: "8 years. And yet, every time I see you, my heart still skips a beat. You are not just my love, Suru. You are my life." }
+];
 
 const Gallery: React.FC = () => {
-    const [selectedId, setSelectedId] = useState<number | null>(null);
-
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        const target = e.target as HTMLImageElement;
-        // Check if we are already using a placeholder to avoid infinite loop
-        if (!target.src.includes('placehold.co')) {
-            target.src = `https://placehold.co/400x600/pink/white?text=Add+Photo+${photos.find(p => p.src === target.getAttribute('src') || p.src.includes(target.getAttribute('src')?.split('/').pop() || ''))?.id || ''}`;
-        }
-    };
+    const [selectedMoment, setSelectedMoment] = useState<typeof moments[0] | null>(null);
 
     return (
-        <section id="gallery" style={{ padding: '4rem 1rem', zIndex: 10, position: 'relative' }}>
-            <h2 className="font-handwriting" style={{ textAlign: 'center', marginBottom: '3rem', fontSize: '2.5rem', color: 'var(--color-beige)' }}>
-                Our Memories
-            </h2>
+        <section id="gallery" style={{ padding: '6rem 1rem', zIndex: 10, position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                style={{ textAlign: 'center', maxWidth: '800px', marginBottom: '4rem' }}
+            >
+                <h2 className="font-handwriting" style={{ fontSize: '3rem', color: 'var(--color-pink)', marginBottom: '1rem' }}>
+                    Moments Etched in Stars
+                </h2>
+                <p style={{ fontSize: '1.2rem', color: 'var(--color-lavender)', fontStyle: 'italic' }}>
+                    "I don't need photographs to remember. <br />Every beautiful moment with you is burned into my soul forever."
+                </p>
+            </motion.div>
 
             <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                gap: '1rem',
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                gap: '2rem',
                 maxWidth: '1000px',
-                margin: '0 auto'
+                position: 'relative'
             }}>
-                {photos.map((photo) => (
+                {moments.map((moment, index) => (
                     <motion.div
-                        layoutId={`card-${photo.id}`}
-                        key={photo.id}
-                        onClick={() => setSelectedId(photo.id)}
-                        whileHover={{ scale: 1.05 }}
+                        key={moment.year}
+                        layoutId={`star-${moment.year}`}
+                        onClick={() => setSelectedMoment(moment)}
+                        whileHover={{ scale: 1.2, rotate: 10 }}
+                        whileTap={{ scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1, type: "spring" }}
                         style={{
-                            borderRadius: '10px',
-                            overflow: 'hidden',
-                            cursor: 'pointer',
-                            aspectRatio: '2/3',
-                            position: 'relative'
-                        }}
-                    >
-                        <img
-                            src={photo.src}
-                            alt={photo.caption}
-                            onError={handleImageError}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                        <div style={{
-                            position: 'absolute',
-                            top: 0, left: 0, right: 0, bottom: 0,
-                            background: 'rgba(0,0,0,0.3)',
-                            opacity: 0,
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            background: 'radial-gradient(circle at 30% 30%, var(--color-gold), #b8860b)',
+                            boxShadow: '0 0 20px var(--color-gold), 0 0 40px rgba(255, 215, 0, 0.4)',
                             display: 'flex',
+                            flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            transition: 'opacity 0.3s'
+                            cursor: 'pointer',
+                            color: 'var(--color-dark)',
+                            fontWeight: 'bold',
+                            position: 'relative',
+                            border: '2px solid rgba(255,255,255,0.4)'
                         }}
-                            className="hover-overlay"
-                        >
-                            ❤️
-                        </div>
+                    >
+                        <span style={{ fontSize: '1.2rem' }}>{moment.year}</span>
+                        <div style={{ fontSize: '1.5rem', marginTop: '-5px' }}>✨</div>
                     </motion.div>
                 ))}
             </div>
 
             <AnimatePresence>
-                {selectedId && (
+                {selectedMoment && (
                     <motion.div
-                        layoutId={`card-${selectedId}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setSelectedId(null)}
+                        layoutId={`star-${selectedMoment.year}`}
+                        className="modal-overlay"
+                        onClick={() => setSelectedMoment(null)}
                         style={{
                             position: 'fixed',
                             top: 0, left: 0, right: 0, bottom: 0,
-                            background: 'rgba(0,0,0,0.9)',
+                            background: 'rgba(26, 26, 46, 0.95)',
+                            backdropFilter: 'blur(10px)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -90,16 +90,51 @@ const Gallery: React.FC = () => {
                             padding: '2rem'
                         }}
                     >
-                        <motion.img
-                            src={photos.find(p => p.id === selectedId)?.src}
-                            onError={handleImageError}
-                            style={{ maxHeight: '90vh', maxWidth: '100%', borderRadius: '10px' }}
-                        />
+                        <motion.div
+                            initial={{ y: 50, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 50, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(255,193,204,0.1), rgba(26,26,46,0.8))',
+                                border: '1px solid var(--color-pink)',
+                                padding: '3rem',
+                                borderRadius: '20px',
+                                maxWidth: '500px',
+                                textAlign: 'center',
+                                boxShadow: '0 0 50px rgba(255,193,204,0.2)'
+                            }}
+                        >
+                            <h3 className="font-handwriting" style={{ fontSize: '3rem', color: 'var(--color-gold)', marginBottom: '0.5rem' }}>
+                                {selectedMoment.year}
+                            </h3>
+                            <h4 style={{ fontSize: '1.5rem', marginBottom: '2rem', color: 'var(--color-pink)', textTransform: 'uppercase', letterSpacing: '2px' }}>
+                                {selectedMoment.title}
+                            </h4>
+                            <p style={{ fontSize: '1.3rem', lineHeight: '1.8', fontStyle: 'italic', fontFamily: 'Playfair Display' }}>
+                                "{selectedMoment.text}"
+                            </p>
+                            <button
+                                onClick={() => setSelectedMoment(null)}
+                                style={{
+                                    marginTop: '2rem',
+                                    background: 'transparent',
+                                    border: '1px solid var(--color-lavender)',
+                                    color: 'var(--color-lavender)',
+                                    padding: '10px 30px',
+                                    borderRadius: '30px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s'
+                                }}
+                            >
+                                Close Memory
+                            </button>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+            <div style={{ textAlign: 'center', marginTop: '5rem' }}>
                 <a href="#letter" style={{ textDecoration: 'none' }}>
                     <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -107,14 +142,14 @@ const Gallery: React.FC = () => {
                         style={{
                             padding: '12px 24px',
                             fontSize: '1.2rem',
-                            backgroundColor: 'var(--color-gold)',
-                            color: 'var(--color-dark)',
-                            border: 'none',
+                            backgroundColor: 'transparent',
+                            color: 'var(--color-pink)',
+                            border: '1px solid var(--color-pink)',
                             borderRadius: '30px',
-                            fontWeight: 'bold'
+                            letterSpacing: '1px'
                         }}
                     >
-                        Click for a Surprise
+                        Scroll Down for My Vow ↓
                     </motion.button>
                 </a>
             </div>
