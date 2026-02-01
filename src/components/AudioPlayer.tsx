@@ -44,7 +44,11 @@ const AudioPlayer = ({ play }: { play: boolean }) => {
 
     useEffect(() => {
         if (play && isReady && playerRef.current && playerRef.current.playVideo) {
-            playerRef.current.playVideo();
+            // Delay music by 17 seconds as requested
+            const timer = setTimeout(() => {
+                playerRef.current.playVideo();
+            }, 17000);
+            return () => clearTimeout(timer);
         }
     }, [play, isReady]);
 
